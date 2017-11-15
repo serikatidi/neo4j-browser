@@ -36,6 +36,7 @@ import {
 
 import {
   DatabaseIcon,
+  CustomIcon,
   FavoritesIcon,
   DocumentsIcon,
   CloudSyncIcon,
@@ -63,6 +64,12 @@ class Sidebar extends Component {
           />
         ),
         content: DatabaseDrawer
+      },
+      {
+        name: 'Custom',
+        title: 'Custom',
+        icon: isOpen => <CustomIcon isOpen={isOpen} />,
+        content: FavoritesDrawer
       },
       {
         name: 'Favorites',

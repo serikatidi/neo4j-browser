@@ -108,6 +108,14 @@ export const DatabaseIcon = ({ isOpen, connectionState }) => (
     }
   />
 )
+export const CustomIcon = ({ isOpen }) => (
+  <IconContainer
+    isOpen={isOpen}
+    activeStyle={styles.white}
+    inactiveStyle={styles.inactive}
+    className='sl sl-user-circle'
+  />
+)
 export const FavoritesIcon = ({ isOpen }) => (
   <IconContainer
     isOpen={isOpen}
