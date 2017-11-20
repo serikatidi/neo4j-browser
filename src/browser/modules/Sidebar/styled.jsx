@@ -23,6 +23,7 @@ import {
   QuestionIcon,
   PlayIcon,
   PlainPlayIcon,
+  PlainCustomPlayIcon,
   PlusIcon,
   BinIcon,
   EditIcon
@@ -137,11 +138,29 @@ const StyledExecFavoriteButton = styled.div`
     opacity: 1;
   }
 `
+const StyledExecCustomButton = styled.div`
+  display: inline-block;
+  opacity: 0.2;
+  position: relative;
+  vertical-align: top;
+  margin: 3px 0 0 6px;
+  &:hover {
+    opacity: 1;
+  }
+`
 export const ExecFavoriteButton = props => {
   return (
     <StyledExecFavoriteButton {...props}>
       <PlainPlayIcon />
     </StyledExecFavoriteButton>
+  )
+}
+
+export const ExecCustomButton = props => {
+  return (
+    <StyledExecCustomButton {...props}>
+      <PlainCustomPlayIcon />
+    </StyledExecCustomButton>
   )
 }
 

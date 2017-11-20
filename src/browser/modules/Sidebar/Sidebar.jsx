@@ -21,6 +21,7 @@
 import { Component } from 'preact'
 import { connect } from 'preact-redux'
 import DatabaseInfo from '../DatabaseInfo/DatabaseInfo'
+import Custom from './Custom'
 import Favorites from './Favorites'
 import Documents from './Documents'
 import About from './About'
@@ -49,6 +50,7 @@ class Sidebar extends Component {
     const openDrawer = this.props.openDrawer
     const onNavClick = this.props.onNavClick
     const DatabaseDrawer = DatabaseInfo
+    const CustomDrawer = Custom
     const FavoritesDrawer = Favorites
     const DocumentsDrawer = Documents
     const SettingsDrawer = Settings
@@ -69,7 +71,7 @@ class Sidebar extends Component {
         name: 'Custom',
         title: 'Custom',
         icon: isOpen => <CustomIcon isOpen={isOpen} />,
-        content: FavoritesDrawer
+        content: CustomDrawer
       },
       {
         name: 'Favorites',
