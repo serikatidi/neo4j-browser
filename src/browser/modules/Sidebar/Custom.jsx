@@ -32,7 +32,7 @@ import {
 import {
   StyledSetting,
   StyledSettingLabel,
-  StyledSettingTextInput,
+  StyledCustomTextInput,
   ExecCustomButton
 } from './styled'
 
@@ -45,9 +45,9 @@ const visualQueries = [
     settings: [
       {
         personaNif: {
-          displayName: 'NIF Persona física o jurídica',
+          displayName: 'NIF persona física o jurídica',
           tooltip: 'NIF de la persona física o jurídica',
-          query: `MATCH (n:PERSONA_FISICA), (m:PERSONA_JURIDICA) WHERE n.ID_NIF_COMPELTO='${placeholder}' or n.ID_NIF='${placeholder}' or m.ID_NIF_COMPELTO='${placeholder}' or m.ID_NIF='${placeholder}' RETURN n, m`
+          query: `MATCH (n:PERSONA_FISICA) WHERE n.ID_NIF = '${placeholder}' RETURN n UNION MATCH (n:PERSONA_FISICA) WHERE n.ID_NIF_COMPLETO='${placeholder}' RETURN n UNION MATCH (n:PERSONA_JURIDICA) WHERE n.ID_NIF = '${placeholder}' RETURN n UNION MATCH (n:PERSONA_JURIDICA) WHERE n.ID_NIF_COMPLETO='${placeholder}' RETURN n`
         }
       }
     ]
@@ -57,9 +57,9 @@ const visualQueries = [
     settings: [
       {
         fincaIdRegistro: {
-          displayName: 'ID Catastro',
-          tooltip: 'Identificador de la finca en catastro',
-          query: `MATCH (n:FINCA) WHERE n.ID_FINCA='${placeholder}' RETURN n`
+          displayName: 'ID finca',
+          tooltip: 'Identificador de la finca en la tabla de catastro',
+          query: `MATCH (n:FINCA) WHERE n.ID_FINCA = ${placeholder} RETURN n`
         }
       }
     ]
@@ -83,7 +83,7 @@ export const Custom = ({ settings, onExecClick = () => {} }) => {
         return (
           <StyledSetting key={i}>
             <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
-            <StyledSettingTextInput
+            <StyledCustomTextInput
               id={visualQuery}
               title={[tooltip]}
               className={visualQuery}
