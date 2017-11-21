@@ -83,10 +83,17 @@ export const Custom = ({ settings, onExecClick = () => {} }) => {
         return (
           <StyledSetting key={i}>
             <StyledSettingLabel title={tooltip}>{visual}</StyledSettingLabel>
+            <br />
             <StyledCustomTextInput
               id={visualQuery}
               title={[tooltip]}
               className={visualQuery}
+              onKeyUp={event => {
+                event.preventDefault()
+                if (event.keyCode === 13) {
+                  onExecClick(query, event.target.value)
+                }
+              }}
             />
             <ExecCustomButton
               onClick={event => {

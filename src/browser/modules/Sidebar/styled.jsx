@@ -54,6 +54,7 @@ export const StyledCustomTextInput = styled.input`
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
+  width: 192px;
 `
 
 export const StyledHelpLink = styled.a``
