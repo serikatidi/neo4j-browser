@@ -28,6 +28,7 @@ import {
   StyledLegendContents,
   StyledLabelToken,
   StyledTokenCount,
+  StyledTokenActive,
   StyledLegendInlineList
 } from './styled'
 import { RowExpandToggleComponent } from './RowExpandToggle'
@@ -129,6 +130,11 @@ export class LegendComponent extends Component {
           backgroundColor: styleForItem.get('color'),
           color: styleForItem.get('text-color-internal')
         }
+        const activeToken = legendItems[legendItemKey].active ? (
+          <i class='fa fa-check-square-o' aria-hidden='true' />
+        ) : (
+          <i class='fa fa-square-o' aria-hidden='true' />
+        )
         return (
           <StyledLegendInlineListItem key={i}>
             <StyledLegendContents className='contents'>
@@ -142,6 +148,7 @@ export class LegendComponent extends Component {
                 <StyledTokenCount className='count'>
                   {`(${legendItems[legendItemKey].count})`}
                 </StyledTokenCount>
+                <StyledTokenActive>{activeToken}</StyledTokenActive>
               </StyledTokenRelationshipType>
             </StyledLegendContents>
           </StyledLegendInlineListItem>

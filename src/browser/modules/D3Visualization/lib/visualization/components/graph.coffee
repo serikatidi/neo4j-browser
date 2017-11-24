@@ -26,12 +26,16 @@ class neo.models.Graph
     @_nodes = []
     @relationshipMap = {}
     @_relationships = []
+    @_activeRelationshipsSet = new Set
 
   nodes: ->
     @_nodes
 
   relationships: ->
     @_relationships
+
+  activeRelationshipsSet: ->
+    @_activeRelationshipsSet
 
   groupedRelationships: ->
     class NodePair
@@ -95,6 +99,7 @@ class neo.models.Graph
         relationship.internal = false
         @relationshipMap[relationship.id] = relationship
         @_relationships.push(relationship)
+        @_activeRelationshipsSet.add(relationship.type)
     @
 
   addInternalRelationships: (relationships) =>
@@ -103,6 +108,7 @@ class neo.models.Graph
       if not @findRelationship(relationship.id)?
         @relationshipMap[relationship.id] = relationship
         @_relationships.push(relationship)
+        @_activeRelationshipsSet.add(relationship.type)
     @
 
   pruneInternalRelationships: =>
@@ -112,6 +118,7 @@ class neo.models.Graph
     @addRelationships(relationships)
 
   pruneRelationshipAndSingleNodes: (name) =>
+    @_activeRelationshipsSet.delete(name)
     relationships = @_relationships.filter((relationship) -> name != relationship.type)
     @relationshipMap = {}
     @_relationships = []

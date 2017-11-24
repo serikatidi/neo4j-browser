@@ -88,6 +88,7 @@ export function getGraphStats (graph) {
         properties: []
       }
     }
+    relTypeStats['*'].active = true
     if (relTypeStats[rel.type]) {
       relTypeStats[rel.type].count = relTypeStats[rel.type].count + 1
       relTypeStats[rel.type].properties = Object.assign(
@@ -95,10 +96,14 @@ export function getGraphStats (graph) {
         relTypeStats[rel.type].properties,
         rel.propertyMap
       )
+      relTypeStats[rel.type].active = graph
+        .activeRelationshipsSet()
+        .has(rel.type)
     } else {
       relTypeStats[rel.type] = {
         count: 1,
-        properties: rel.propertyMap
+        properties: rel.propertyMap,
+        active: graph.activeRelationshipsSet().has(rel.type)
       }
     }
   })

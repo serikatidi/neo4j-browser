@@ -25,6 +25,7 @@ import neoGraphStyle from '../graphStyle'
 import { InspectorComponent } from './Inspector'
 import { LegendComponent } from './Legend'
 import { StyledFullSizeContainer } from './styled'
+import { getGraphStats } from '../mapper'
 
 const deduplicateNodes = nodes => {
   return nodes.reduce(
@@ -141,6 +142,7 @@ export class ExplorerComponent extends Component {
 
   onDblSelectedRelType (relType, propertyKeys) {
     this.state.graph.pruneRelationshipAndSingleNodes(relType)
+    this.setState({ stats: getGraphStats(this.state.graph) })
     this.state.graphView.update()
   }
 
