@@ -110,8 +110,8 @@ export class ExplorerComponent extends Component {
     this.setState({ selectedItem: item })
   }
 
-  onGraphModelChange (stats, graph) {
-    this.setState({ stats, graph })
+  onGraphModelChange (stats, graph, graphView) {
+    this.setState({ stats, graph, graphView })
     this.props.updateStyle(this.state.graphStyle.toSheet())
   }
 
@@ -141,6 +141,7 @@ export class ExplorerComponent extends Component {
 
   onDblSelectedRelType (relType, propertyKeys) {
     this.state.graph.pruneRelationship(relType)
+    this.state.graphView.update()
   }
 
   componentWillReceiveProps (props) {
