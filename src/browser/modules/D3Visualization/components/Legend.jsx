@@ -119,6 +119,12 @@ export class LegendComponent extends Component {
             Object.keys(legendItems[legendItemKey].properties)
           )
         }
+        const onDblClick = () => {
+          this.props.onDblSelectedRelType(
+            legendItemKey,
+            Object.keys(legendItems[legendItemKey].properties)
+          )
+        }
         const style = {
           backgroundColor: styleForItem.get('color'),
           color: styleForItem.get('text-color-internal')
@@ -128,6 +134,7 @@ export class LegendComponent extends Component {
             <StyledLegendContents className='contents'>
               <StyledTokenRelationshipType
                 onClick={onClick}
+                onDoubleClick={onDblClick}
                 style={style}
                 className='token token-relationship-type'
               >

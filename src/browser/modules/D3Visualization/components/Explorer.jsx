@@ -110,8 +110,8 @@ export class ExplorerComponent extends Component {
     this.setState({ selectedItem: item })
   }
 
-  onGraphModelChange (stats) {
-    this.setState({ stats: stats })
+  onGraphModelChange (stats, graph) {
+    this.setState({ stats, graph })
     this.props.updateStyle(this.state.graphStyle.toSheet())
   }
 
@@ -137,6 +137,10 @@ export class ExplorerComponent extends Component {
         }
       }
     })
+  }
+
+  onDblSelectedRelType (relType, propertyKeys) {
+    this.state.graph.pruneRelationship(relType)
   }
 
   componentWillReceiveProps (props) {
@@ -184,6 +188,7 @@ export class ExplorerComponent extends Component {
           graphStyle={neoGraphStyle()}
           onSelectedLabel={this.onSelectedLabel.bind(this)}
           onSelectedRelType={this.onSelectedRelType.bind(this)}
+          onDblSelectedRelType={this.onDblSelectedRelType.bind(this)}
         />
       )
     } else {
@@ -193,6 +198,7 @@ export class ExplorerComponent extends Component {
           graphStyle={this.state.graphStyle}
           onSelectedLabel={this.onSelectedLabel.bind(this)}
           onSelectedRelType={this.onSelectedRelType.bind(this)}
+          onDblSelectedRelType={this.onDblSelectedRelType.bind(this)}
         />
       )
     }

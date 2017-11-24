@@ -39,7 +39,7 @@ export class GraphEventHandler {
   }
 
   graphModelChanged () {
-    this.onGraphModelChange(getGraphStats(this.graph))
+    this.onGraphModelChange(getGraphStats(this.graph), this.graph)
   }
 
   selectItem (item) {

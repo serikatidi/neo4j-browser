@@ -115,7 +115,7 @@ export class GraphComponent extends Component {
       )
       this.graphEH.bindEventHandlers()
       this.state.currentStyleRules = this.props.graphStyle.toString()
-      this.props.onGraphModelChange(getGraphStats(this.graph))
+      this.props.onGraphModelChange(getGraphStats(this.graph), this.graph)
       this.graphView.resize()
       this.graphView.update()
     }
@@ -142,7 +142,7 @@ export class GraphComponent extends Component {
       this.graph.addRelationships(
         mapRelationships(props.relationships, this.graph)
       )
-      this.props.onGraphModelChange(getGraphStats(this.graph))
+      this.props.onGraphModelChange(getGraphStats(this.graph), this.graph)
     } else if (
       !deepEquals(this.state.currentStyleRules, props.graphStyle.toString())
     ) {
