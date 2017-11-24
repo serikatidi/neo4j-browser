@@ -140,7 +140,7 @@ export class ExplorerComponent extends Component {
   }
 
   onDblSelectedRelType (relType, propertyKeys) {
-    this.state.graph.pruneRelationship(relType)
+    this.state.graph.pruneRelationshipAndSingleNodes(relType)
     this.state.graphView.update()
   }
 

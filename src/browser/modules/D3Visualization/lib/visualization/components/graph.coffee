@@ -111,11 +111,15 @@ class neo.models.Graph
     @_relationships = []
     @addRelationships(relationships)
 
-  pruneRelationship: (name) =>
+  pruneRelationshipAndSingleNodes: (name) =>
     relationships = @_relationships.filter((relationship) -> name != relationship.type)
     @relationshipMap = {}
     @_relationships = []
     @addRelationships(relationships)
+    nodes = @_nodes.filter((node) => @findAllRelationshipToNode(node).length > 0)
+    @nodeMap = {}
+    @_nodes = []
+    @addNodes(nodes)
 
   findNode: (id) => @nodeMap[id]
 
