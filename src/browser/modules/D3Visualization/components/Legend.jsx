@@ -146,7 +146,9 @@ export class LegendComponent extends Component {
               >
                 {legendItemKey}
                 <StyledTokenCount className='count'>
-                  {`(${legendItems[legendItemKey].count})`}
+                  {`(${legendItems[legendItemKey].countActive}/${legendItems[
+                    legendItemKey
+                  ].count})`}
                 </StyledTokenCount>
                 <StyledTokenActive>{activeToken}</StyledTokenActive>
               </StyledTokenRelationshipType>
