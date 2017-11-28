@@ -26,13 +26,23 @@ class neo.models.Graph
     @_nodes = []
     @relationshipMap = {}
     @_relationships = []
+    @nodeMapTotal = {}
+    @_nodesTotal = []
+    @relationshipMapTotal = {}
+    @_relationshipsTotal = []
     @_activeRelationshipsSet = new Set
 
   nodes: ->
     @_nodes
 
+  nodesTotal: ->
+    @_nodesTotal
+
   relationships: ->
     @_relationships
+
+  relationshipsTotal: ->
+    @_relationshipsTotal
 
   activeRelationshipsSet: ->
     @_activeRelationshipsSet
@@ -66,12 +76,18 @@ class neo.models.Graph
       if !@findNode(node.id)?
         @nodeMap[node.id] = node
         @_nodes.push(node)
+      if !@findNodeTotal(node.id)?
+        @nodeMapTotal[node.id] = node
+        @_nodesTotal.push(node)
     @
 
   removeNode: (node) =>
     if @findNode(node.id)?
       delete @nodeMap[node.id]
       @_nodes.splice(@_nodes.indexOf(node), 1)
+    if @findNodeTotal(node.id)?
+      delete @nodeMapTotal[node.id]
+      @_nodesTotal.splice(@_nodesTotal.indexOf(node), 1)
     @
 
   updateNode: (node) =>
@@ -88,6 +104,8 @@ class neo.models.Graph
       @updateNode r.target
       @_relationships.splice(@_relationships.indexOf(r), 1)
       delete @relationshipMap[r.id]
+      @_relationshipsTotal.splice(@_relationshipsTotal.indexOf(r), 1)
+      delete @relationshipMapTotal[r.id]
     @
 
   addRelationships: (relationships) =>
@@ -100,6 +118,13 @@ class neo.models.Graph
         @relationshipMap[relationship.id] = relationship
         @_relationships.push(relationship)
         @_activeRelationshipsSet.add(relationship.type)
+      existingRelationshipTotal = @findRelationshipTotal(relationship.id)
+      if existingRelationshipTotal?
+        existingRelationshipTotal.internal = false
+      else
+        relationship.internal = false
+        @relationshipMapTotal[relationship.id] = relationship
+        @_relationshipsTotal.push(relationship)
     @
 
   addInternalRelationships: (relationships) =>
@@ -109,6 +134,9 @@ class neo.models.Graph
         @relationshipMap[relationship.id] = relationship
         @_relationships.push(relationship)
         @_activeRelationshipsSet.add(relationship.type)
+      if not @findRelationshipTotal(relationship.id)?
+        @relationshipMapTotal[relationship.id] = relationship
+        @_relationshipsTotal.push(relationship)
     @
 
   pruneInternalRelationships: =>
@@ -118,20 +146,28 @@ class neo.models.Graph
     @addRelationships(relationships)
 
   pruneRelationshipAndSingleNodes: (name) =>
-    @_activeRelationshipsSet.delete(name)
-    relationships = @_relationships.filter((relationship) -> name != relationship.type)
+    if @_activeRelationshipsSet.has(name)
+      @_activeRelationshipsSet.delete(name)
+    else
+      @_activeRelationshipsSet.add(name)
+    @pruneInactiveRelationshipsAndSingleNodes()
+
+  pruneInactiveRelationshipsAndSingleNodes: =>
+    relationships = @_relationshipsTotal.filter((relationship) => @_activeRelationshipsSet.has(relationship.type))
     @relationshipMap = {}
     @_relationships = []
     @addRelationships(relationships)
-    nodes = @_nodes.filter((node) => @findAllRelationshipToNode(node).length > 0)
+    nodes = @_nodesTotal.filter((node) => @findAllRelationshipToNode(node).length > 0)
     @nodeMap = {}
     @_nodes = []
     @addNodes(nodes)
 
   findNode: (id) => @nodeMap[id]
 
+  findNodeTotal: (id) => @nodeMapTotal[id]
+
   findNodeNeighbourIds: (id) =>
-    @_relationships
+    @_relationshipsTotal
       .filter((relationship) -> relationship.source.id is id or relationship.target.id is id)
       .map((relationship) ->
         if relationship.target.id is id
@@ -140,6 +176,8 @@ class neo.models.Graph
       )
 
   findRelationship: (id) => @relationshipMap[id]
+
+  findRelationshipTotal: (id) => @relationshipMapTotal[id]
 
   findAllRelationshipToNode: (node) =>
     @_relationships
@@ -150,3 +188,8 @@ class neo.models.Graph
       @_nodes = []
       @relationshipMap = {}
       @_relationships = []
+      @nodeMapTotal = {}
+      @_nodesTotal = []
+      @relationshipMapTotal = {}
+      @_relationshipsTotal = []
+      @_activeRelationshipsSet = new Set

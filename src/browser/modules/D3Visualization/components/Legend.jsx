@@ -135,6 +135,14 @@ export class LegendComponent extends Component {
         ) : (
           <i class='fa fa-square-o' aria-hidden='true' />
         )
+        const styledTokenActive =
+          legendItemKey !== '*' ? (
+            <StyledTokenActive>{activeToken}</StyledTokenActive>
+          ) : (
+            ''
+          )
+        const totalCount = `(${legendItems[legendItemKey]
+          .countActive}/${legendItems[legendItemKey].count})`
         return (
           <StyledLegendInlineListItem key={i}>
             <StyledLegendContents className='contents'>
@@ -146,11 +154,9 @@ export class LegendComponent extends Component {
               >
                 {legendItemKey}
                 <StyledTokenCount className='count'>
-                  {`(${legendItems[legendItemKey].countActive}/${legendItems[
-                    legendItemKey
-                  ].count})`}
+                  {totalCount}
                 </StyledTokenCount>
-                <StyledTokenActive>{activeToken}</StyledTokenActive>
+                {styledTokenActive}
               </StyledTokenRelationshipType>
             </StyledLegendContents>
           </StyledLegendInlineListItem>
