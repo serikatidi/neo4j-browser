@@ -30,7 +30,7 @@ class neo.models.Graph
     @_nodesTotal = []
     @relationshipMapTotal = {}
     @_relationshipsTotal = []
-    @_activeRelationshipsSet = new Set
+    @_inactiveRelationshipsSet = new Set
 
   nodes: ->
     @_nodes
@@ -44,8 +44,8 @@ class neo.models.Graph
   relationshipsTotal: ->
     @_relationshipsTotal
 
-  activeRelationshipsSet: ->
-    @_activeRelationshipsSet
+  inactiveRelationshipsSet: ->
+    @_inactiveRelationshipsSet
 
   groupedRelationships: ->
     class NodePair
@@ -91,7 +91,7 @@ class neo.models.Graph
     @
 
   updateNode: (node) =>
-    if @findNode(node.id)?
+    if @findNodeTotal(node.id)?
       @removeNode node
       node.expanded = false
       node.minified = true
@@ -117,7 +117,6 @@ class neo.models.Graph
         relationship.internal = false
         @relationshipMap[relationship.id] = relationship
         @_relationships.push(relationship)
-        @_activeRelationshipsSet.add(relationship.type)
       existingRelationshipTotal = @findRelationshipTotal(relationship.id)
       if existingRelationshipTotal?
         existingRelationshipTotal.internal = false
@@ -133,7 +132,6 @@ class neo.models.Graph
       if not @findRelationship(relationship.id)?
         @relationshipMap[relationship.id] = relationship
         @_relationships.push(relationship)
-        @_activeRelationshipsSet.add(relationship.type)
       if not @findRelationshipTotal(relationship.id)?
         @relationshipMapTotal[relationship.id] = relationship
         @_relationshipsTotal.push(relationship)
@@ -146,14 +144,14 @@ class neo.models.Graph
     @addRelationships(relationships)
 
   pruneRelationshipAndSingleNodes: (name) =>
-    if @_activeRelationshipsSet.has(name)
-      @_activeRelationshipsSet.delete(name)
+    if @_inactiveRelationshipsSet.has(name)
+      @_inactiveRelationshipsSet.delete(name)
     else
-      @_activeRelationshipsSet.add(name)
+      @_inactiveRelationshipsSet.add(name)
     @pruneInactiveRelationshipsAndSingleNodes()
 
   pruneInactiveRelationshipsAndSingleNodes: =>
-    relationships = @_relationshipsTotal.filter((relationship) => @_activeRelationshipsSet.has(relationship.type))
+    relationships = @_relationshipsTotal.filter((relationship) => !@_inactiveRelationshipsSet.has(relationship.type))
     @relationshipMap = {}
     @_relationships = []
     @addRelationships(relationships)
@@ -192,4 +190,4 @@ class neo.models.Graph
       @_nodesTotal = []
       @relationshipMapTotal = {}
       @_relationshipsTotal = []
-      @_activeRelationshipsSet = new Set
+      @_inactiveRelationshipsSet = new Set

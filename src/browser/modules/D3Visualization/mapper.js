@@ -93,7 +93,7 @@ export function getGraphStats (graph) {
     relTypeStats['*'].active = true
     if (relTypeStats[rel.type]) {
       relTypeStats[rel.type].count = relTypeStats[rel.type].count + 1
-      let isActive = graph.activeRelationshipsSet().has(rel.type)
+      let isActive = !graph.inactiveRelationshipsSet().has(rel.type)
       relTypeStats[rel.type].countActive =
         relTypeStats[rel.type].countActive + (isActive ? 1 : 0)
       relTypeStats[rel.type].properties = Object.assign(
@@ -103,7 +103,7 @@ export function getGraphStats (graph) {
       )
       relTypeStats[rel.type].active = isActive
     } else {
-      let isActive = graph.activeRelationshipsSet().has(rel.type)
+      let isActive = !graph.inactiveRelationshipsSet().has(rel.type)
       relTypeStats[rel.type] = {
         count: 1,
         countActive: isActive ? 1 : 0,

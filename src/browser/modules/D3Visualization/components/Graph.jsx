@@ -146,6 +146,7 @@ export class GraphComponent extends Component {
       this.graph.addRelationships(
         mapRelationships(props.relationships, this.graph)
       )
+      this.graph.pruneInactiveRelationshipsAndSingleNodes()
       this.props.onGraphModelChange(
         getGraphStats(this.graph),
         this.graph,
