@@ -25,6 +25,7 @@ class neo.models.Relationship
     @propertyMap = properties
     @propertyList = for own key,value of @propertyMap
       { key: key, value: value }
+    @active = true
 
   toJSON: ->
     @propertyMap

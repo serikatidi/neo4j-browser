@@ -233,6 +233,12 @@ neo.viz = (el, measureSize, graph, layout, style) ->
     relationshipGroups
     .classed("selected", (relationship) -> relationship.selected)
 
+    relationshipGroups.filter((relationship) => !relationship.active)
+    .attr("style", "display:none")
+
+    relationshipGroups.filter((relationship) => relationship.active)
+    .attr("style", "")
+
     geometry.onGraphChange(graph)
 
     for renderer in neo.renderers.relationship
@@ -252,6 +258,12 @@ neo.viz = (el, measureSize, graph, layout, style) ->
 
     nodeGroups
     .classed("selected", (node) -> node.selected)
+
+    nodeGroups.filter((node) => !node.active)
+    .attr("style", "display:none")
+
+    nodeGroups.filter((node) => node.active)
+    .attr("style", "")
 
     for renderer in neo.renderers.node
       nodeGroups.call(renderer.onGraphChange, viz)

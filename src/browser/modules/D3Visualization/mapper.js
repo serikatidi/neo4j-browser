@@ -54,7 +54,7 @@ export function mapRelationships (relationships, graph) {
 export function getGraphStats (graph) {
   let labelStats = {}
   let relTypeStats = {}
-  graph.nodesTotal().forEach(node => {
+  graph.nodes().forEach(node => {
     node.labels.forEach(label => {
       if (labelStats['*']) {
         labelStats['*'].count = labelStats['*'].count + 1
@@ -79,7 +79,7 @@ export function getGraphStats (graph) {
       }
     })
   })
-  graph.relationshipsTotal().forEach(rel => {
+  graph.relationships().forEach(rel => {
     if (relTypeStats['*']) {
       relTypeStats['*'].count = relTypeStats['*'].count + 1
     } else {
@@ -89,7 +89,7 @@ export function getGraphStats (graph) {
         properties: []
       }
     }
-    relTypeStats['*'].countActive = graph.relationships().length
+    relTypeStats['*'].countActive = graph.findAllActiveRelationships().length
     relTypeStats['*'].active = true
     if (relTypeStats[rel.type]) {
       relTypeStats[rel.type].count = relTypeStats[rel.type].count + 1
