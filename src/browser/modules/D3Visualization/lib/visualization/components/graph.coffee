@@ -137,7 +137,8 @@ class neo.models.Graph
     @_nodes = @_nodes.map((node) => @updateNodeState(node))
     @_relationships = @_relationships.map((relationship) => @updateRelationState(relationship))
     @_relationships = @_relationships.map((relationship) => @updateRelationStateFromNodes(relationship))
-    @_nodes = @_nodes.map((node) => @updateNodeStateFromRelationships(node))
+    if @_relationships.length > 0
+      @_nodes = @_nodes.map((node) => @updateNodeStateFromRelationships(node))
     @updateNodeMapStates()
     @updateRelationshipMapStates()
 
