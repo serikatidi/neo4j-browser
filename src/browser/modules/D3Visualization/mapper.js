@@ -61,20 +61,29 @@ export function getGraphStats (graph) {
       } else {
         labelStats['*'] = {
           count: 1,
+          countActive: 1,
           properties: []
         }
       }
+      labelStats['*'].countActive = graph.findAllActiveNodes().length
+      labelStats['*'].active = true
       if (labelStats[label]) {
         labelStats[label].count = labelStats[label].count + 1
+        let isActive = !graph.inactiveNodesSet().has(label)
+        labelStats[label].countActive =
+          labelStats[label].countActive + (isActive ? 1 : 0)
         labelStats[label].properties = Object.assign(
           {},
           labelStats[label].properties,
           node.propertyMap
         )
       } else {
+        let isActive = !graph.inactiveNodesSet().has(label)
         labelStats[label] = {
           count: 1,
-          properties: node.propertyMap
+          countActive: isActive ? 1 : 0,
+          properties: node.propertyMap,
+          active: isActive
         }
       }
     })

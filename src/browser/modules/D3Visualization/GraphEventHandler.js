@@ -107,7 +107,7 @@ export class GraphEventHandler {
       if (err) return
       graph.addNodes(mapNodes(nodes))
       graph.addRelationships(mapRelationships(relationships, graph))
-      graph.pruneInactiveRelationshipsAndSingleNodes()
+      graph.pruneNodesAndRelationships()
       graphView.update()
       graphModelChanged()
     })

@@ -24,12 +24,16 @@ class neo.models.Graph
   constructor: () ->
     @nodeMap = {}
     @_nodes = []
+    @_inactiveNodesSet = new Set
     @relationshipMap = {}
     @_relationships = []
     @_inactiveRelationshipsSet = new Set
 
   nodes: ->
     @_nodes
+
+  inactiveNodesSet: ->
+    @_inactiveNodesSet
 
   relationships: ->
     @_relationships
@@ -115,18 +119,27 @@ class neo.models.Graph
     @_relationships = []
     @addRelationships(relationships)
 
+  pruneNodeAndRelationships: (name) =>
+    if @_inactiveNodesSet.has(name)
+      @_inactiveNodesSet.delete(name)
+    else
+      @_inactiveNodesSet.add(name)
+    @pruneNodesAndRelationships()
+
   pruneRelationshipAndSingleNodes: (name) =>
     if @_inactiveRelationshipsSet.has(name)
       @_inactiveRelationshipsSet.delete(name)
     else
       @_inactiveRelationshipsSet.add(name)
-    @pruneInactiveRelationshipsAndSingleNodes()
+    @pruneNodesAndRelationships()
 
-  pruneInactiveRelationshipsAndSingleNodes: =>
-    @_relationships = @_relationships.map((relationship) => @updateRelationState(relationship))
+  pruneNodesAndRelationships: =>
     @_nodes = @_nodes.map((node) => @updateNodeState(node))
-    @updateRelationshipMapStates()
+    @_relationships = @_relationships.map((relationship) => @updateRelationState(relationship))
+    @_relationships = @_relationships.map((relationship) => @updateRelationStateFromNodes(relationship))
+    @_nodes = @_nodes.map((node) => @updateNodeStateFromRelationships(node))
     @updateNodeMapStates()
+    @updateRelationshipMapStates()
 
   updateRelationshipMapStates: =>
     for relationship in @_relationships
@@ -136,6 +149,13 @@ class neo.models.Graph
     for node in @_nodes
       @nodeMap[node.id] = node
 
+  updateNodeState: (node) =>
+    if @_inactiveNodesSet.has(node.labels[0])
+      node.active = false
+    else
+      node.active = true
+    node
+  
   updateRelationState: (relationship) =>
     if @_inactiveRelationshipsSet.has(relationship.type)
       relationship.active = false
@@ -143,7 +163,14 @@ class neo.models.Graph
       relationship.active = true
     relationship
 
-  updateNodeState: (node) =>
+  updateRelationStateFromNodes: (relationship) =>
+    if @nodeMap[relationship.source.id].active && @nodeMap[relationship.target.id].active && !@_inactiveRelationshipsSet.has(relationship.type)
+      relationship.active = true
+    else
+      relationship.active = false
+    relationship
+  
+  updateNodeStateFromRelationships: (node) =>
     if @findAllRelationshipToActiveNode(node).length > 0
       node.active = true
     else

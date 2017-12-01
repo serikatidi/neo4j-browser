@@ -128,6 +128,12 @@ export class ExplorerComponent extends Component {
     })
   }
 
+  onDblSelectedLabel (label, propertyKeys) {
+    this.state.graph.pruneNodeAndRelationships(label)
+    this.setState({ stats: getGraphStats(this.state.graph) })
+    this.state.graphView.update()
+  }
+
   onSelectedRelType (relType, propertyKeys) {
     this.setState({
       selectedItem: {
@@ -190,6 +196,7 @@ export class ExplorerComponent extends Component {
           stats={this.state.stats}
           graphStyle={neoGraphStyle()}
           onSelectedLabel={this.onSelectedLabel.bind(this)}
+          onDblSelectedLabel={this.onDblSelectedLabel.bind(this)}
           onSelectedRelType={this.onSelectedRelType.bind(this)}
           onDblSelectedRelType={this.onDblSelectedRelType.bind(this)}
         />
@@ -200,6 +207,7 @@ export class ExplorerComponent extends Component {
           stats={this.state.stats}
           graphStyle={this.state.graphStyle}
           onSelectedLabel={this.onSelectedLabel.bind(this)}
+          onDblSelectedLabel={this.onDblSelectedLabel.bind(this)}
           onSelectedRelType={this.onSelectedRelType.bind(this)}
           onDblSelectedRelType={this.onDblSelectedRelType.bind(this)}
         />

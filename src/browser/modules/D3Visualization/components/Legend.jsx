@@ -63,21 +63,44 @@ export class LegendComponent extends Component {
             Object.keys(labels[legendItemKey].properties)
           )
         }
+        const onDblClick = () => {
+          this.props.onDblSelectedLabel(
+            legendItemKey,
+            Object.keys(labels[legendItemKey].properties)
+          )
+        }
         const style = {
           backgroundColor: styleForItem.get('color'),
           color: styleForItem.get('text-color-internal')
         }
+        const activeToken = labels[legendItemKey].active ? (
+          <i class='fa fa-check-square-o' aria-hidden='true' />
+        ) : (
+          <i class='fa fa-square-o' aria-hidden='true' />
+        )
+        const styledTokenActive =
+          legendItemKey !== '*' ? (
+            <StyledTokenActive>{activeToken}</StyledTokenActive>
+          ) : (
+            ''
+          )
+        const totalCount = `(${labels[legendItemKey].countActive}/${labels[
+          legendItemKey
+        ].count})`
         return (
           <StyledLegendInlineListItem key={i}>
             <StyledLegendContents className='contents'>
               <StyledLabelToken
                 onClick={onClick}
+                onDoubleClick={onDblClick}
                 style={style}
                 className='token token-label'
               >
                 {legendItemKey}
-                <StyledTokenCount className='count'>{`(${labels[legendItemKey]
-                  .count})`}</StyledTokenCount>
+                <StyledTokenCount className='count'>
+                  {totalCount}
+                </StyledTokenCount>
+                {styledTokenActive}
               </StyledLabelToken>
             </StyledLegendContents>
           </StyledLegendInlineListItem>
