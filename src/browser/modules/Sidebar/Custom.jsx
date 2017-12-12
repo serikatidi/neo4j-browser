@@ -47,7 +47,7 @@ const visualQueries = [
         personaNif: {
           displayName: 'NIF persona física o jurídica',
           tooltip: 'NIF de la persona física o jurídica',
-          query: `MATCH (n:PERSONA_FISICA) WHERE n.ID_NIF = '${placeholder}' RETURN n UNION MATCH (n:PERSONA_FISICA) WHERE n.ID_NIF_COMPLETO='${placeholder}' RETURN n UNION MATCH (n:PERSONA_JURIDICA) WHERE n.ID_NIF = '${placeholder}' RETURN n UNION MATCH (n:PERSONA_JURIDICA) WHERE n.ID_NIF_COMPLETO='${placeholder}' RETURN n`
+          query: `// Persona con NIF ${placeholder} \nMATCH (n:PERSONA_FISICA) WHERE n.ID_NIF = '${placeholder}' RETURN n UNION MATCH (n:PERSONA_FISICA) WHERE n.ID_NIF_COMPLETO='${placeholder}' RETURN n UNION MATCH (n:PERSONA_JURIDICA) WHERE n.ID_NIF = '${placeholder}' RETURN n UNION MATCH (n:PERSONA_JURIDICA) WHERE n.ID_NIF_COMPLETO='${placeholder}' RETURN n`
         }
       }
     ]
@@ -59,7 +59,7 @@ const visualQueries = [
         fincaIdRegistro: {
           displayName: 'ID finca',
           tooltip: 'Identificador de la finca en la tabla de catastro',
-          query: `MATCH (n:FINCA) WHERE n.ID_FINCA = ${placeholder} RETURN n`
+          query: `// Finca con ID ${placeholder} \nMATCH (n:FINCA) WHERE n.ID_FINCA = ${placeholder} RETURN n`
         }
       }
     ]
