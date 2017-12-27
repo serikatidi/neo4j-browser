@@ -96,6 +96,13 @@ export class GraphEventHandler {
     this.deselectItem()
   }
 
+  nodeInforma (d) {
+    console.log(d)
+    this.deselectItem()
+    this.graphView.update()
+    this.graphModelChanged()
+  }
+
   nodeDblClicked (d) {
     const graph = this.graph
     const graphView = this.graphView
@@ -190,6 +197,7 @@ export class GraphEventHandler {
       .on('nodeClicked', this.nodeClicked.bind(this))
       .on('nodeDblClicked', this.nodeDblClicked.bind(this))
       .on('nodeUnlock', this.nodeUnlock.bind(this))
+      .on('nodeInforma', this.nodeInforma.bind(this))
     this.onItemMouseOut()
   }
 }

@@ -23,9 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 do ->
   noop = ->
 
-  numberOfItemsInContextMenu = 3
-
-  arc = (radius, itemNumber, width = 30) ->
+  arc = (radius, itemNumber, numberOfItemsInContextMenu = 3, width = 30) ->
     itemNumber = itemNumber - 1
     startAngle = ((2*Math.PI)/numberOfItemsInContextMenu) * itemNumber
     endAngle = startAngle + ((2*Math.PI)/numberOfItemsInContextMenu)
@@ -51,7 +49,7 @@ do ->
         delete node.contextMenu
         viz.trigger('menuMouseOut', node))
 
-  createMenuItem = (selection, viz, eventName, itemNumber, className, position, textValue, helpValue) ->
+  createMenuItem = (selection, viz, eventName, itemNumber, className, position, position2, textValue, helpValue) ->
     path = selection.selectAll('path.' + className).data(getSelectedNode)
     textpath = selection.selectAll('text.' + className).data(getSelectedNode)
 
@@ -60,7 +58,7 @@ do ->
     .classed(className, true)
     .classed('context-menu-item', true)
     .attr
-        d: (node) -> arc(node.radius, itemNumber, 1)()
+        d: (node) -> arc(node.radius, itemNumber, getNumberOfItemsInContextMenu(node), 1)()
 
     text = textpath.enter()
     .append('text')
@@ -70,8 +68,8 @@ do ->
     .attr
         'font-family': 'FontAwesome'
         fill: (node) -> viz.style.forNode(node).get('text-color-internal')
-        x: (node) -> arc(node.radius, itemNumber).centroid()[0] + position[0]
-        y: (node) -> arc(node.radius, itemNumber).centroid()[1] + position[1]
+        x: (node) -> arc(node.radius, itemNumber, getNumberOfItemsInContextMenu(node)).centroid()[0] + (if isPersonaJuridica(node) then position[0] else position2[0])
+        y: (node) -> arc(node.radius, itemNumber, getNumberOfItemsInContextMenu(node)).centroid()[1] + (if isPersonaJuridica(node) then position[1] else position2[1])
 
     attachContextEvent(eventName, [tab, text], viz, helpValue, textValue)
 
@@ -79,7 +77,7 @@ do ->
     .transition()
     .duration(200)
     .attr
-        d: (node) -> arc(node.radius, itemNumber)()
+        d: (node) -> arc(node.radius, itemNumber, getNumberOfItemsInContextMenu(node))()
 
     text
     .attr("transform", "scale(1)")
@@ -89,32 +87,45 @@ do ->
     .transition()
     .duration(200)
     .attr
-        d: (node) -> arc(node.radius, itemNumber, 1)()
+        d: (node) -> arc(node.radius, itemNumber, getNumberOfItemsInContextMenu(node), 1)()
     .remove()
 
     textpath
     .exit()
     .attr("transform", "scale(0)")
     .remove()
+  
+  isPersonaJuridica = (node) ->
+    node.labels[0] == 'PERSONA_JURIDICA'
+
+  getNumberOfItemsInContextMenu = (node) ->
+    if isPersonaJuridica(node) then 4 else 3
 
   donutRemoveNode = new neo.Renderer(
-    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeClose', 1, 'remove_node', [-4, 0], '\uf00d', 'Remove node from the visualization')
+    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeClose', 1, 'remove_node', [0, 4], [-4, 0], '\uf00d', 'Remove node from the visualization')
 
     onTick: noop
   )
 
   donutExpandNode = new neo.Renderer(
-    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeDblClicked', 2, 'expand_node', [0, 4], '\uf0b2', 'Expand child relationships')
+    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeDblClicked', 2, 'expand_node', [0, 4], [0, 4], '\uf0b2', 'Expand child relationships')
 
     onTick: noop
   )
 
   donutUnlockNode = new neo.Renderer(
-    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeUnlock', 3, 'unlock_node', [4, 0], '\uf09c', 'Unlock the node to re-layout the graph')
+    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeUnlock', 3, 'unlock_node', [0, 4], [4, 0], '\uf09c', 'Unlock the node to re-layout the graph')
 
     onTick: noop
   )
 
+  donutInformaNode = new neo.Renderer(
+    onGraphChange: (selection, viz) -> createMenuItem(selection, viz, 'nodeInforma', 4, 'informa_node', [4, 0], [-10000, -10000], '\uf15c', 'Get information from Informa')
+
+    onTick: noop
+  )
+
+  neo.renderers.menu.push(donutInformaNode)
   neo.renderers.menu.push(donutExpandNode)
   neo.renderers.menu.push(donutRemoveNode)
   neo.renderers.menu.push(donutUnlockNode)
