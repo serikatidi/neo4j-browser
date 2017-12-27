@@ -27,6 +27,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
+const BundleTracker = require('webpack-bundle-tracker')
 
 const nodeEnv = process.env.NODE_ENV || 'development'
 const isProduction = nodeEnv === 'production'
@@ -75,7 +76,8 @@ const plugins = [
     template: path.join(sourcePath, 'index.html'),
     path: buildPath,
     filename: 'index.html'
-  })
+  }),
+  new BundleTracker({ filename: './webpack-stats.json' })
 ]
 
 // Common rules
@@ -259,7 +261,7 @@ module.exports = {
   },
   output: {
     path: buildPath,
-    publicPath: '',
+    publicPath: isProduction ? '/static/' : 'http://localhost:8080/',
     filename: 'app-[hash].js',
     chunkFilename: '[name].[chunkhash].js'
   },
@@ -314,6 +316,11 @@ module.exports = {
       colors: {
         green: '\u001b[32m'
       }
+    },
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET',
+      'Access-Control-Allow-Headers': 'Content-Type'
     }
   }
 }
