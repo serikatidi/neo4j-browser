@@ -19,6 +19,7 @@
  */
 
 import { mapNodes, mapRelationships, getGraphStats } from './mapper'
+var axios = require('axios')
 
 export class GraphEventHandler {
   constructor (
@@ -97,10 +98,34 @@ export class GraphEventHandler {
   }
 
   nodeInforma (d) {
-    console.log(d)
-    this.deselectItem()
-    this.graphView.update()
-    this.graphModelChanged()
+    const graph = this.graph
+    const graphView = this.graphView
+    const graphModelChanged = this.graphModelChanged.bind(this)
+    const getNodeNeighbours = this.getNodeNeighbours
+    graph.pruneInformaNodesAndRelationships(d)
+    axios
+      .get('/informa', {
+        params: {
+          cif: d.propertyMap.ID_NIF_COMPLETO
+        }
+      })
+      .then(function (response) {
+        console.log(response)
+        getNodeNeighbours(d, graph.findNodeNeighbourIds(d.id), function (
+          err,
+          { nodes, relationships }
+        ) {
+          if (err) return
+          graph.addNodes(mapNodes(nodes))
+          graph.addRelationships(mapRelationships(relationships, graph))
+          graph.pruneNodesAndRelationships()
+          graphView.update()
+          graphModelChanged()
+        })
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
   }
 
   nodeDblClicked (d) {

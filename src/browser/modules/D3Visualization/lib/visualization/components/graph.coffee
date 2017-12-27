@@ -119,6 +119,12 @@ class neo.models.Graph
     @_relationships = []
     @addRelationships(relationships)
 
+  pruneInformaNodesAndRelationships: (node) =>
+    @_relationships = @_relationships.filter((relationship) => not (relationship.target.id is node.id and (relationship.type == 'ACCIONISTA_INFORMA' or relationship.type == 'ADMINISTRADOR_INFORMA')))
+    @_nodes = @_nodes.filter((node) -> node.labels[0] != "PERSONA_INFORMA")
+    @updateNodeMapStates()
+    @updateRelationshipMapStates()
+
   pruneNodeAndRelationships: (name) =>
     if @_inactiveNodesSet.has(name)
       @_inactiveNodesSet.delete(name)
