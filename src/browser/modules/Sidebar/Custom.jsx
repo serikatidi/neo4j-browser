@@ -38,6 +38,10 @@ import {
 
 const placeholder = '___VAL___'
 const placeholderRegExp = new RegExp(placeholder, 'g')
+const placeholderCalle = '___VALCALLE___'
+const placeholderMunicipio = '___VALMUNICIPIO___'
+const placeholderCalleRegExp = new RegExp(placeholderCalle, 'g')
+const placeholderMunicipioRegExp = new RegExp(placeholderMunicipio, 'g')
 
 const visualQueries = [
   {
@@ -49,24 +53,35 @@ const visualQueries = [
           tooltip: 'NIF de la persona física o jurídica',
           query: `// Persona con NIF ${placeholder} \nMATCH (n:PERSONA_FISICA) WHERE n.ID_NIF = '${placeholder}' RETURN n UNION MATCH (n:PERSONA_FISICA) WHERE n.ID_NIF_COMPLETO='${placeholder}' RETURN n UNION MATCH (n:PERSONA_JURIDICA) WHERE n.ID_NIF = '${placeholder}' RETURN n UNION MATCH (n:PERSONA_JURIDICA) WHERE n.ID_NIF_COMPLETO='${placeholder}' RETURN n`
         }
+      },
+      {
+        personaNombre: {
+          displayName: 'Nombre persona física o jurídica',
+          tooltip: 'Nombre de la persona física o jurídica por LIKE',
+          query: `// Persona con Nombre ${placeholder} \nMATCH (n:PERSONA_FISICA) WHERE n.AT_NOMBRE =~ '.*${placeholder}.*' RETURN n UNION MATCH (n:PERSONA_JURIDICA) WHERE n.AT_NOMBRE =~ '.*${placeholder}.*' RETURN n`
+        }
       }
     ]
   },
   {
-    title: 'Fincas',
+    title: 'Locales',
     settings: [
       {
-        fincaIdRegistro: {
-          displayName: 'ID finca',
-          tooltip: 'Identificador de la finca en la tabla de catastro',
-          query: `// Finca con ID ${placeholder} \nMATCH (n:FINCA) WHERE n.ID_FINCA = ${placeholder} RETURN n`
+        direccionIdCatastro: {
+          displayName: 'ID local catastro',
+          tooltip: 'Identificador del local en la tabla de catastro',
+          query: `// Local con ID_CATASTRO_PK ${placeholder} \nMATCH (n:LOCAL) WHERE n.ID_CATASTRO_PK = '${placeholder}' RETURN n`
         }
       }
     ]
   }
 ]
 
-export const Custom = ({ settings, onExecClick = () => {} }) => {
+export const Custom = ({
+  settings,
+  onExecClick = () => {},
+  onExecClickDireccion = () => {}
+}) => {
   if (!settings) return null
   const mappedSettings = visualQueries.map((visualSetting, i) => {
     const title = <DrawerSubHeader>{visualSetting.title}</DrawerSubHeader>
@@ -115,12 +130,80 @@ export const Custom = ({ settings, onExecClick = () => {} }) => {
     )
   })
 
+  const direccionTitle = (
+    <DrawerSubHeader>Locales y Direcciones</DrawerSubHeader>
+  )
+  const direccionSettings = (() => {
+    const tooltipCalle = 'Calle por LIKE'
+    const tooltipMunicipio = 'Municipio por LIKE'
+    const query = `// Local con calle ${placeholderCalle} y municipio ${placeholderMunicipio}\nMATCH (n:LOCAL) WHERE n.AT_VIA =~ '.*${placeholderCalle}.*' AND n.DE_MUNICIPIO =~ '.*${placeholderMunicipio}.*' RETURN n.ID_CATASTRO_PK as ID, n.ID_SN_LOCAL_PRINCIPA AS LOCAL_PRINCIPAL, n.DE_MUNICIPIO AS MUNICIPIO, n.AT_VIA AS VIA, n.AT_PORTAL AS PORTAL, n.AT_ESCALERA as ESCALERA, n.AT_PLANTA AS PLANTA, n.AT_MANO AS MANO ORDER BY MUNICIPIO, VIA, PORTAL, ESCALERA, PLANTA, MANO`
+    return (
+      <StyledSetting key='1000'>
+        <StyledSettingLabel title={tooltipCalle}>Calle</StyledSettingLabel>
+        <br />
+        <StyledCustomTextInput
+          id='calle'
+          title={[tooltipCalle]}
+          className='idCalle'
+          onKeyUp={event => {
+            event.preventDefault()
+            if (event.keyCode === 13) {
+              onExecClickDireccion(
+                query,
+                event.target.value,
+                event.target.nextElementSibling.nextElementSibling
+                  .nextElementSibling.value
+              )
+            }
+          }}
+        />
+        <StyledSettingLabel title={tooltipMunicipio}>
+          Municipio
+        </StyledSettingLabel>
+        <br />
+        <StyledCustomTextInput
+          id='municipio'
+          title={[tooltipMunicipio]}
+          className='idMunicipio'
+          onKeyUp={event => {
+            event.preventDefault()
+            if (event.keyCode === 13) {
+              onExecClickDireccion(
+                query,
+                event.target.previousElementSibling.previousElementSibling
+                  .previousElementSibling.value,
+                event.target.value
+              )
+            }
+          }}
+        />
+        <ExecCustomButton
+          onClick={event => {
+            onExecClickDireccion(
+              query,
+              event.target.parentElement.previousElementSibling
+                .previousElementSibling.previousElementSibling
+                .previousElementSibling.value,
+              event.target.parentNode.previousElementSibling.value
+            )
+          }}
+        />
+      </StyledSetting>
+    )
+  })()
+
   return (
     <Drawer id='custom-queries'>
       <DrawerHeader>Custom queries</DrawerHeader>
       <DrawerBody>
         <DrawerSection>
-          <DrawerSectionBody>{mappedSettings}</DrawerSectionBody>
+          <DrawerSectionBody>
+            {mappedSettings}
+            <div>
+              {direccionTitle}
+              {direccionSettings}
+            </div>
+          </DrawerSectionBody>
         </DrawerSection>
       </DrawerBody>
     </Drawer>
@@ -137,6 +220,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onExecClick: (cmd, arg) => {
       cmd = cmd.replace(placeholderRegExp, arg)
+      const action = executeCommand(cmd)
+      ownProps.bus.send(action.type, action)
+    },
+    onExecClickDireccion: (cmd, calle, municipio) => {
+      cmd = cmd.replace(placeholderCalleRegExp, calle)
+      cmd = cmd.replace(placeholderMunicipioRegExp, municipio)
       const action = executeCommand(cmd)
       ownProps.bus.send(action.type, action)
     }
