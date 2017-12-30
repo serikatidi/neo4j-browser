@@ -104,6 +104,7 @@ export const Custom = ({
               title={[tooltip]}
               className={visualQuery}
               onKeyUp={event => {
+                event.target.value = event.target.value.toUpperCase()
                 event.preventDefault()
                 if (event.keyCode === 13) {
                   onExecClick(query, event.target.value)
@@ -146,6 +147,7 @@ export const Custom = ({
           title={[tooltipCalle]}
           className='idCalle'
           onKeyUp={event => {
+            event.target.value = event.target.value.toUpperCase()
             event.preventDefault()
             if (event.keyCode === 13) {
               onExecClickDireccion(
@@ -166,6 +168,7 @@ export const Custom = ({
           title={[tooltipMunicipio]}
           className='idMunicipio'
           onKeyUp={event => {
+            event.target.value = event.target.value.toUpperCase()
             event.preventDefault()
             if (event.keyCode === 13) {
               onExecClickDireccion(

@@ -55,6 +55,7 @@ export const StyledCustomTextInput = styled.input`
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 192px;
+  text-transform: uppercase;
 `
 
 export const StyledHelpLink = styled.a``

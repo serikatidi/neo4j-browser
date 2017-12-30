@@ -36,6 +36,20 @@ export default function neoGraphStyle () {
       'text-color-external': '#000000',
       'text-color-internal': '#FFFFFF',
       caption: '<type>'
+    },
+    'node.PERSONA_FISICA': {
+      caption: '{AT_NOMBRE}',
+      diameter: '80px',
+      color: '#FFD86E',
+      'border-color': '#EDBA39',
+      'text-color-internal': '#604A0E'
+    },
+    'node.PERSONA_JURIDICA': {
+      caption: '{AT_NOMBRE}',
+      color: '#FF756E',
+      'border-color': '#E06760',
+      'text-color-internal': '#FFFFFF',
+      diameter: '80px'
     }
   }
   const defaultSizes = [
