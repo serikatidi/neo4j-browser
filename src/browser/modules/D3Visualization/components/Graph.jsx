@@ -130,6 +130,7 @@ export class GraphComponent extends Component {
       this.graph.addInternalRelationships(
         mapRelationships(internalRelationships, this.graph)
       )
+      this.graph.pruneNodesAndRelationships()
       this.graphView.update()
       this.graphEH.onItemMouseOut()
     }

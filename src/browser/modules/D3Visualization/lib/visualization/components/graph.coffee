@@ -145,8 +145,6 @@ class neo.models.Graph
     @_relationships = @_relationships.map((relationship) => @updateRelationStateFromNodes(relationship))
     if @_relationships.length > 0
       @_nodes = @_nodes.map((node) => @updateNodeStateFromRelationships(node))
-    @updateNodeMapStates()
-    @updateRelationshipMapStates()
 
   updateRelationshipMapStates: =>
     for relationship in @_relationships
@@ -161,6 +159,7 @@ class neo.models.Graph
       node.active = false
     else
       node.active = true
+    @nodeMap[node.id] = node
     node
   
   updateRelationState: (relationship) =>
@@ -168,6 +167,7 @@ class neo.models.Graph
       relationship.active = false
     else
       relationship.active = true
+    @relationshipMap[relationship.id] = relationship
     relationship
 
   updateRelationStateFromNodes: (relationship) =>
@@ -175,6 +175,7 @@ class neo.models.Graph
       relationship.active = true
     else
       relationship.active = false
+    @relationshipMap[relationship.id] = relationship
     relationship
   
   updateNodeStateFromRelationships: (node) =>
@@ -182,6 +183,7 @@ class neo.models.Graph
       node.active = true
     else
       node.active = false
+    @nodeMap[node.id] = node
     node
 
   findNode: (id) => @nodeMap[id]
