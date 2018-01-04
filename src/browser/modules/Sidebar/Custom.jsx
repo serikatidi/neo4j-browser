@@ -58,19 +58,20 @@ const visualQueries = [
         personaNombre: {
           displayName: 'Nombre persona física o jurídica',
           tooltip: 'Nombre de la persona física o jurídica por LIKE',
-          query: `// Persona con Nombre ${placeholder} \nMATCH (n:PERSONA_FISICA) WHERE n.AT_NOMBRE =~ '.*${placeholder}.*' RETURN n UNION MATCH (n:PERSONA_JURIDICA) WHERE n.AT_NOMBRE =~ '.*${placeholder}.*' RETURN n`
+          query: `// Persona con Nombre like ${placeholder} \nMATCH (n:PERSONA_FISICA) WHERE n.AT_NOMBRE =~ '.*${placeholder}.*' RETURN n UNION MATCH (n:PERSONA_JURIDICA) WHERE n.AT_NOMBRE =~ '.*${placeholder}.*' RETURN n`
         }
       }
     ]
   },
   {
-    title: 'Locales',
+    title: 'Locales y Direcciones',
     settings: [
       {
-        direccionIdCatastro: {
-          displayName: 'ID local catastro',
-          tooltip: 'Identificador del local en la tabla de catastro',
-          query: `// Local con ID_CATASTRO_PK ${placeholder} \nMATCH (n:LOCAL) WHERE n.ID_CATASTRO_PK = '${placeholder}' RETURN n`
+        direccionId: {
+          displayName: 'ID catastro o ID dirección',
+          tooltip:
+            'Identificador del local en la tabla de catastro o identificador de la dirección en la tabla de direcciones',
+          query: `// Local con ID_CATASTRO_PK ${placeholder} o Dirección con ID_DIRECCION_PK ${placeholder}\nMATCH (n:LOCAL) WHERE n.ID_CATASTRO_PK = '${placeholder}' RETURN n UNION MATCH (n:DIRECCION) WHERE n.ID_DIRECCION_PK = '${placeholder}' RETURN n`
         }
       }
     ]
@@ -131,13 +132,10 @@ export const Custom = ({
     )
   })
 
-  const direccionTitle = (
-    <DrawerSubHeader>Locales y Direcciones</DrawerSubHeader>
-  )
   const direccionSettings = (() => {
     const tooltipCalle = 'Calle por LIKE'
     const tooltipMunicipio = 'Municipio por LIKE'
-    const query = `// Local con calle ${placeholderCalle} y municipio ${placeholderMunicipio}\nMATCH (n:LOCAL) WHERE n.AT_VIA =~ '.*${placeholderCalle}.*' AND n.DE_MUNICIPIO =~ '.*${placeholderMunicipio}.*' RETURN n.ID_CATASTRO_PK as ID, n.ID_SN_LOCAL_PRINCIPA AS LOCAL_PRINCIPAL, n.DE_MUNICIPIO AS MUNICIPIO, n.AT_VIA AS VIA, n.AT_PORTAL AS PORTAL, n.AT_ESCALERA as ESCALERA, n.AT_PLANTA AS PLANTA, n.AT_MANO AS MANO ORDER BY MUNICIPIO, VIA, PORTAL, ESCALERA, PLANTA, MANO`
+    const query = `// Locales y direcciones con calle like ${placeholderCalle} y municipio like ${placeholderMunicipio}\nMATCH (n:LOCAL) WHERE n.AT_VIA =~ '.*${placeholderCalle}.*' AND n.DE_MUNICIPIO =~ '.*${placeholderMunicipio}.*' RETURN n.ID_CATASTRO_PK as ID, 'Local' AS TIPO, n.ID_SN_LOCAL_PRINCIPAL AS LOCAL_PRINCIPAL, n.DE_MUNICIPIO AS MUNICIPIO, n.AT_VIA AS VIA, n.AT_PORTAL AS PORTAL, n.AT_ESCALERA as ESCALERA, n.AT_PLANTA AS PLANTA, n.AT_MANO AS MANO  ORDER BY MUNICIPIO, VIA, PORTAL, ESCALERA, PLANTA, MANO UNION MATCH (n:DIRECCION) WHERE n.NOMBRE_VIA =~ '.*${placeholderCalle}.*' AND n.AT_MUNICIPIO =~ '.*${placeholderMunicipio}.*' RETURN n.ID_DIRECCION_PK as ID, 'Dirección' AS TIPO, 'N/A' as LOCAL_PRINCIPAL, n.AT_MUNICIPIO as MUNICIPIO, n.NOMBRE_VIA AS VIA, n.AT_NUM_CASA as PORTAL, n.AT_ESCALERA as ESCALERA, n.AT_PLANTA AS PLANTA, n.AT_MANO AS MANO ORDER BY MUNICIPIO, VIA, PORTAL, ESCALERA, PLANTA, MANO`
     return (
       <StyledSetting key='1000'>
         <StyledSettingLabel title={tooltipCalle}>Calle</StyledSettingLabel>
@@ -202,10 +200,7 @@ export const Custom = ({
         <DrawerSection>
           <DrawerSectionBody>
             {mappedSettings}
-            <div>
-              {direccionTitle}
-              {direccionSettings}
-            </div>
+            <div>{direccionSettings}</div>
           </DrawerSectionBody>
         </DrawerSection>
       </DrawerBody>
