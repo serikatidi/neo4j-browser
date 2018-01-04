@@ -46,10 +46,61 @@ export default function neoGraphStyle () {
     },
     'node.PERSONA_JURIDICA': {
       caption: '{AT_NOMBRE}',
+      diameter: '80px',
       color: '#FF756E',
       'border-color': '#E06760',
-      'text-color-internal': '#FFFFFF',
-      diameter: '80px'
+      'text-color-internal': '#FFFFFF'
+    },
+    'node.DIRECCION': {
+      caption:
+        '{NOMBRE_VIA} {AT_NUM_CASA} {AT_PLANTA} {AT_ESCALERA} {AT_MANO}, {AT_MUNICIPIO}',
+      diameter: '80px',
+      color: '#6DCE9E',
+      'border-color': '#60B58B',
+      'text-color-internal': '#FFFFFF'
+    },
+    'node.DECLARACION': {
+      caption: '{ID_DECLARACION}',
+      diameter: '50px',
+      color: '#FB95AF',
+      'border-color': '#E0849B',
+      'text-color-internal': '#FFFFFF'
+    },
+    'node.LOCAL': {
+      caption:
+        '{AT_VIA} {AT_PORTAL} {AT_PLANTA} {AT_ESCALERA} {AT_MANO}, {DE_MUNICIPIO}',
+      diameter: '80px',
+      color: '#68BDF6',
+      'border-color': '#5CA8DB',
+      'text-color-internal': '#FFFFFF'
+    },
+    'node.PERSONA_INFORMA': {
+      caption: '{NOMBRE_APELLIDOS}{DENOMINACION} {NIF}',
+      diameter: '80px',
+      color: '#DE9BF9',
+      'border-color': '#BF85D6',
+      'text-color-internal': '#FFFFFF'
+    },
+    'node.FICHA': {
+      caption: '{ID_FICHA}',
+      diameter: '50px',
+      color: '#A5ABB6',
+      'border-color': '#9AA1AC',
+      'text-color-internal': '#FFFFFF'
+    },
+    'node.DECLARACION_INT': {
+      caption: '{ID_DECLARACION}',
+      diameter: '50px',
+      color: '#FB95AF',
+      'border-color': '#E0849B',
+      'text-color-internal': '#FFFFFF'
+    },
+    'node.ACTIVIDAD': {
+      caption: '{ID_EPIGRAFE_IAE}',
+      diameter: '50px',
+      color: '#DA7C30',
+      'border-color': '#CC6C1E',
+      'text-color-internal': '#FFFFFF'
     }
   }
   const defaultSizes = [
@@ -153,6 +204,16 @@ export default function neoGraphStyle () {
       color: '#FFD86E',
       'border-color': '#EDBA39',
       'text-color-internal': '#604A0E'
+    },
+    {
+      color: '#948B3D',
+      'border-color': '#898139',
+      'text-color-internal': '#FFFFFF'
+    },
+    {
+      color: '#DA7C30',
+      'border-color': '#CC6C1E',
+      'text-color-internal': '#FFFFFF'
     }
   ]
   const Selector = (function () {
