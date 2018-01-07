@@ -179,10 +179,12 @@ class neo.models.Graph
     relationship
   
   updateNodeStateFromRelationships: (node) =>
-    if @findAllRelationshipToActiveNode(node).length > 0
-      node.active = true
-    else
-      node.active = false
+    relationshipsToNode = @findAllRelationshipToNode(node)
+    if relationshipsToNode.length > 0
+      if @findAllActiveRelationshipsFromRelationships(relationshipsToNode).length > 0
+        node.active = true
+      else
+        node.active = false
     @nodeMap[node.id] = node
     node
 
@@ -211,6 +213,9 @@ class neo.models.Graph
   
   findAllActiveRelationships: =>
     @_relationships.filter((relationship) -> relationship.active)
+
+  findAllActiveRelationshipsFromRelationships: (relationships) =>
+    relationships.filter((relationship) -> relationship.active)
 
    resetGraph: ->
       @nodeMap = {}
