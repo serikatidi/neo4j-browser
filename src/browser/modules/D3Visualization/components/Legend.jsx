@@ -27,6 +27,7 @@ import {
   StyledLegend,
   StyledLegendContents,
   StyledLabelToken,
+  StyledInformaToken,
   StyledTokenCount,
   StyledTokenActive,
   StyledLegendInlineList
@@ -52,7 +53,7 @@ export class LegendComponent extends Component {
     }
   }
   render () {
-    const mapLabels = labels => {
+    const mapLabels = (labels, informaStatus) => {
       const labelList = Object.keys(labels).map((legendItemKey, i) => {
         const styleForItem = this.props.graphStyle.forNode({
           labels: [legendItemKey]
@@ -106,6 +107,57 @@ export class LegendComponent extends Component {
           </StyledLegendInlineListItem>
         )
       })
+      const informa = informaStatus => {
+        let informaIcon = ''
+        const onClick = () => {
+          this.props.onSelectedInformaToken()
+        }
+        if (informaStatus) {
+          if (informaStatus.status === 'running') {
+            informaIcon = (
+              <i
+                class='fa fa-spin fa-spinner'
+                aria-hidden='true'
+                title='Realizando petición a Informa...'
+              />
+            )
+          } else if (informaStatus.status === 'finished') {
+            if (informaStatus.message) {
+              const message = `Error en la petición a Informa: ${informaStatus.message}`
+              informaIcon = (
+                <i
+                  class='fa fa-exclamation-triangle'
+                  aria-hidden='true'
+                  title={message}
+                />
+              )
+            } else {
+              informaIcon = (
+                <i
+                  class='fa fa-check-circle'
+                  aria-hidden='true'
+                  title='Petición finalizada correctamente'
+                />
+              )
+            }
+          }
+        }
+        return (
+          <StyledLegendInlineListItem
+            key='-1'
+            style={informaIcon ? '' : 'display:none'}
+          >
+            <StyledLegendContents className='contents'>
+              <StyledInformaToken
+                onClick={onClick}
+                className='token token-label'
+              >
+                {informaIcon}
+              </StyledInformaToken>
+            </StyledLegendContents>
+          </StyledLegendInlineListItem>
+        )
+      }
       return (
         <StyledLegendRow
           className={this.state.labelRowContracted ? 'contracted' : ''}
@@ -124,6 +176,7 @@ export class LegendComponent extends Component {
                 })
               }}
             />
+            {informa(informaStatus)}
             {labelList}
           </StyledLegendInlineList>
         </StyledLegendRow>
@@ -211,7 +264,7 @@ export class LegendComponent extends Component {
     let relTypes = mapRelTypes(this.props.stats.relTypes)
     return (
       <StyledLegend className={relTypes ? '' : 'one-row'}>
-        {mapLabels(this.props.stats.labels)}
+        {mapLabels(this.props.stats.labels, this.props.stats.informaStatus)}
         {relTypes}
       </StyledLegend>
     )

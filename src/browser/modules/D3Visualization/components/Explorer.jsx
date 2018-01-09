@@ -111,6 +111,10 @@ export class ExplorerComponent extends Component {
     this.setState({ selectedItem: item })
   }
 
+  onSelectedInformaToken () {
+    this.setState({ stats: { ...this.state.stats, informaStatus: {} } })
+  }
+
   onGraphModelChange (stats, graph, graphView) {
     this.setState({ stats, graph, graphView })
     this.props.updateStyle(this.state.graphStyle.toSheet())
@@ -199,6 +203,7 @@ export class ExplorerComponent extends Component {
           onDblSelectedLabel={this.onDblSelectedLabel.bind(this)}
           onSelectedRelType={this.onSelectedRelType.bind(this)}
           onDblSelectedRelType={this.onDblSelectedRelType.bind(this)}
+          onSelectedInformaToken={this.onSelectedInformaToken.bind(this)}
         />
       )
     } else {
@@ -210,6 +215,7 @@ export class ExplorerComponent extends Component {
           onDblSelectedLabel={this.onDblSelectedLabel.bind(this)}
           onSelectedRelType={this.onSelectedRelType.bind(this)}
           onDblSelectedRelType={this.onDblSelectedRelType.bind(this)}
+          onSelectedInformaToken={this.onSelectedInformaToken.bind(this)}
         />
       )
     }

@@ -241,6 +241,10 @@ export const StyledTokenRelationshipType = styled(StyledToken)`
   padding: 4px 7px 4px 5px;
   border-radius: 3px;
 `
+export const StyledInformaToken = styled(StyledToken)`
+  font-size: 1.3em;
+  padding-bottom: 1px;
+`
 
 export const tokenPropertyKey = styled(StyledToken)`padding: 3px 5px 3px 5px;`
 export const StyledTokenContextMenuKey = styled(StyledLabelToken)`

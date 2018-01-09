@@ -39,9 +39,9 @@ export class GraphEventHandler {
     this.onGraphModelChange = onGraphModelChange
   }
 
-  graphModelChanged () {
+  graphModelChanged (informaStatus = '') {
     this.onGraphModelChange(
-      getGraphStats(this.graph),
+      { ...getGraphStats(this.graph), ...informaStatus },
       this.graph,
       this.graphView
     )
@@ -102,7 +102,9 @@ export class GraphEventHandler {
     const graphView = this.graphView
     const graphModelChanged = this.graphModelChanged.bind(this)
     const getNodeNeighbours = this.getNodeNeighbours
-    graph.pruneInformaNodesAndRelationships(d)
+    this.graphModelChanged({
+      informaStatus: { status: 'running', message: '' }
+    })
     axios
       .get('/informa', {
         params: {
@@ -111,6 +113,13 @@ export class GraphEventHandler {
       })
       .then(function (response) {
         console.log(response)
+        graphModelChanged({
+          informaStatus: {
+            status: 'finished',
+            message: response.data.message || ''
+          }
+        })
+        graph.pruneInformaNodesAndRelationships(d)
         getNodeNeighbours(d, graph.findNodeNeighbourIds(d.id), function (
           err,
           { nodes, relationships }
@@ -120,11 +129,19 @@ export class GraphEventHandler {
           graph.addRelationships(mapRelationships(relationships, graph))
           graph.pruneNodesAndRelationships()
           graphView.update()
-          graphModelChanged()
+          graphModelChanged({
+            informaStatus: {
+              status: 'finished',
+              message: response.data.message || ''
+            }
+          })
         })
       })
       .catch(function (error) {
         console.log(error)
+        graphModelChanged({
+          informaStatus: { status: 'finished', message: error.message || '' }
+        })
       })
   }
 
