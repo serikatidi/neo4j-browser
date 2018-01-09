@@ -319,7 +319,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
       BrowserSyncSignoutIframe(stateProps.browserSyncConfig.logoutUrl)
     },
     onSignOutAndClear: () => {
-      signOut()
+      // signOut()
       const action = clearSyncAndLocal()
       dispatchProps.sendActionToDispatch(action)
       BrowserSyncSignoutIframe(stateProps.browserSyncConfig.logoutUrl)
