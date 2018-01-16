@@ -196,12 +196,12 @@ class Favorites extends Component {
             {ListOfFavorites}
             {ListOfFolders}
           </DrawerSection>
-          <Render if={this.props.showSampleScripts}>
+          {/* <Render if={this.props.showSampleScripts}>
             <DrawerSection>
               <DrawerSubHeader>Sample Scripts</DrawerSubHeader>
               {ListOfSampleFolders}
             </DrawerSection>
-          </Render>
+          </Render> */}
           <DrawerSection>
             <DrawerSubHeader>Import</DrawerSubHeader>
             <FileDrop />

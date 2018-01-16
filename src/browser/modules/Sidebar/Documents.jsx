@@ -72,7 +72,7 @@ const Documents = ({ items = staticItems }) => {
     <Drawer id='db-documents'>
       <DrawerHeader>Documents</DrawerHeader>
       <DrawerBody>
-        <DocumentItems header={'Introduction'} items={items.intro} />
+        {/* <DocumentItems header={'Introduction'} items={items.intro} /> */}
         <DocumentItems header={'Help'} items={items.help} />
         <DocumentItems header={'Useful Resources'} items={items.reference} />
       </DrawerBody>

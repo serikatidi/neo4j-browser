@@ -56,18 +56,18 @@ const visualSettings = [
       }
     ]
   },
-  {
-    title: 'Preferences',
-    settings: [
-      {
-        showSampleScripts: {
-          displayName: 'Show sample scripts',
-          tooltip: 'Show sample scripts in favorites drawer.',
-          type: 'checkbox'
-        }
-      }
-    ]
-  },
+  // {
+  //   title: 'Preferences',
+  //   settings: [
+  //     {
+  //       showSampleScripts: {
+  //         displayName: 'Show sample scripts',
+  //         tooltip: 'Show sample scripts in favorites drawer.',
+  //         type: 'checkbox'
+  //       }
+  //     }
+  //   ]
+  // },
   {
     title: 'Network Connection',
     settings: [
