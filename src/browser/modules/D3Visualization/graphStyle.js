@@ -88,11 +88,11 @@ export default function neoGraphStyle () {
       'border-color': '#9AA1AC',
       'text-color-internal': '#FFFFFF'
     },
-    'node.DECLARACION_INT': {
-      caption: '{ID_DECLARACION}',
+    'node.ACTIVIDAD_INT': {
+      caption: '{AT_DESC_EPIGRAFE}',
       diameter: '50px',
-      color: '#FB95AF',
-      'border-color': '#E0849B',
+      color: '#DA7C30',
+      'border-color': '#CC6C1E',
       'text-color-internal': '#FFFFFF'
     },
     'node.ACTIVIDAD': {
