@@ -120,8 +120,9 @@ class neo.models.Graph
     @addRelationships(relationships)
 
   pruneInformaNodesAndRelationships: (node) =>
-    @_relationships = @_relationships.filter((relationship) => not (relationship.target.id is node.id and (relationship.type == 'ACCIONISTA_INFORMA' or relationship.type == 'ADMINISTRADOR_INFORMA')))
-    @_nodes = @_nodes.filter((node) -> node.labels[0] != "PERSONA_INFORMA")
+    @relationshipsToRemove = @_relationships.filter((relationship) -> relationship.target.id is node.id and (relationship.type == 'ACCIONISTA_INFORMA' or relationship.type == 'ADMINISTRADOR_INFORMA'))
+    @_relationships = @_relationships.filter((relationship) -> not (relationship.target.id is node.id and (relationship.type == 'ACCIONISTA_INFORMA' or relationship.type == 'ADMINISTRADOR_INFORMA')))
+    @_nodes = @_nodes.filter((node) => node.labels[0] != "PERSONA_INFORMA" or (node.labels[0] == "PERSONA_INFORMA" and @findAllRelationshipToNodeWithRelationships(node, @relationshipsToRemove).length == 0))
     @updateNodeMapStates()
     @updateRelationshipMapStates()
 
@@ -203,6 +204,10 @@ class neo.models.Graph
 
   findAllRelationshipToNode: (node) =>
     @_relationships
+      .filter((relationship) -> relationship.source.id is node.id or relationship.target.id is node.id)
+
+  findAllRelationshipToNodeWithRelationships: (node, relationships) =>
+    relationships
       .filter((relationship) -> relationship.source.id is node.id or relationship.target.id is node.id)
 
   findAllRelationshipToActiveNode: (node) =>
